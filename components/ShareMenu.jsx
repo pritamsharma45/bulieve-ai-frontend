@@ -5,7 +5,17 @@ import { Share2, Facebook, Twitter, Send } from "lucide-react";
 
 export default function ShareMenu({ url, title }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [shareUrls, setShareUrls] = useState({});
   const menuRef = useRef(null);
+
+  useEffect(() => {
+    // Set up share URLs after component mounts (client-side only)
+    setShareUrls({
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+      twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
+      whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(`${title} ${url}`)}`,
+    });
+  }, [url, title]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -18,15 +28,11 @@ export default function ShareMenu({ url, title }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const shareUrls = {
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-    twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
-    whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(`${title} ${url}`)}`,
-  };
-
   const handleShare = (platform) => {
-    window.open(shareUrls[platform], '_blank', 'width=600,height=400');
-    setIsOpen(false);
+    if (shareUrls[platform]) {
+      window.open(shareUrls[platform], '_blank', 'width=600,height=400');
+      setIsOpen(false);
+    }
   };
 
   return (

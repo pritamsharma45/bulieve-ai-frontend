@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { MessageCircle, Heart, Share2 } from "lucide-react";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createReaction } from "@/app/actions/reactions";
 import ShareMenu from './ShareMenu';
 
@@ -11,6 +11,11 @@ export default function PostCard({ post }) {
   const { isAuthenticated } = useKindeAuth();
   const [isLiking, setIsLiking] = useState(false);
   const [reactionsCount, setReactionsCount] = useState(post.reactions_count || 0);
+  const [postUrl, setPostUrl] = useState('');
+
+  useEffect(() => {
+    setPostUrl(`${window.location.origin}/posts/${post.id}`);
+  }, [post.id]);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -107,7 +112,7 @@ export default function PostCard({ post }) {
           <span className="text-sm">{post.comments_count}</span>
         </button>
         <ShareMenu 
-          url={`${window.location.origin}/posts/${post.id}`}
+          url={postUrl}
           title={post.content.substring(0, 100)}
         />
       </div>

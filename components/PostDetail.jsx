@@ -2,7 +2,7 @@
 
 import { MessageCircle, Heart, Share2, ArrowLeft, Send } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
 import { createReaction } from "@/app/actions/reactions";
 import { createComment } from "@/app/actions/comments";
@@ -16,6 +16,7 @@ export default function PostDetail({ post }) {
   const [isCommenting, setIsCommenting] = useState(false);
   const [reactionsCount, setReactionsCount] = useState(post.reactions_count || 0);
   const [commentsCount, setCommentsCount] = useState(post.comments_count || 0);
+  const [postUrl, setPostUrl] = useState('');
 
   console.log(post);
   const formatDate = (dateString) => {
@@ -27,6 +28,10 @@ export default function PostDetail({ post }) {
       minute: '2-digit'
     });
   };
+
+  useEffect(() => {
+    setPostUrl(window.location.href);
+  }, []);
 
   const handleLike = async () => {
     if (!isAuthenticated) {
@@ -126,7 +131,7 @@ export default function PostDetail({ post }) {
             <span>{commentsCount}</span>
           </button>
           <ShareMenu 
-            url={window.location.href}
+            url={postUrl}
             title={post.content.substring(0, 100)}
           />
         </div>

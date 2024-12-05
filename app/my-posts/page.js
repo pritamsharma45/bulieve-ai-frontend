@@ -26,7 +26,7 @@ export default function MyPosts() {
   }, []);
 
   const handlePostCreated = (newPost) => {
-    setPosts(prevPosts => [newPost, ...prevPosts]);
+    setPosts((prevPosts) => [newPost, ...prevPosts]);
   };
 
   if (loading) {
@@ -51,7 +51,7 @@ export default function MyPosts() {
           ))
         ) : (
           <p className="text-center text-gray-500 py-8">
-            You haven't created any posts yet.
+            You haven&apos;t created any posts yet.
           </p>
         )}
       </div>
