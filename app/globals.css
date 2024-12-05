@@ -16,6 +16,55 @@
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background-color: #f0f2f5;
+  background-image: url('/doodle-pattern.svg');
+  background-repeat: repeat;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* For dark mode */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #111214;
+  }
+}
+
+/* Add this to ensure content is properly layered above the pattern */
+main {
+  position: relative;
+  z-index: 1;
+  padding-bottom: 80px;
+}
+
+/* Add these styles for better interaction */
+a, button {
+  cursor: pointer;
+  pointer-events: auto !important;
+}
+
+.hover-effect {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+/* Bottom navigation active indicator */
+.active-nav-item {
+  position: relative;
+}
+
+.active-nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+/* Update the footer styles */
+footer {
+  z-index: 50;
+  pointer-events: auto !important;
 }
