@@ -3,7 +3,7 @@ import { ArrowLeft, Users, Lock } from "lucide-react";
 import Link from "next/link";
 
 async function getCommunity(id) {
-  const res = await fetch(`http://127.0.0.1:8000/api/communities/${id}/`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/communities/${id}/`, {
     next: { revalidate: 300 },
   });
 
@@ -16,7 +16,7 @@ async function getCommunity(id) {
 
 async function getCommunityPosts(id) {
   const res = await fetch(
-    `http://127.0.0.1:8000/api/posts/?community_id=${id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/posts/?community_id=${id}`,
     {
       next: { revalidate: 300 },
     }

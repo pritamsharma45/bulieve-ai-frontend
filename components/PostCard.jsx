@@ -5,13 +5,15 @@ import { MessageCircle, Heart, Share2 } from "lucide-react";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
 import { useState, useEffect } from "react";
 import { createReaction } from "@/app/actions/reactions";
-import ShareMenu from './ShareMenu';
+import ShareMenu from "./ShareMenu";
 
 export default function PostCard({ post }) {
   const { isAuthenticated } = useKindeAuth();
   const [isLiking, setIsLiking] = useState(false);
-  const [reactionsCount, setReactionsCount] = useState(post.reactions_count || 0);
-  const [postUrl, setPostUrl] = useState('');
+  const [reactionsCount, setReactionsCount] = useState(
+    post.reactions_count || 0
+  );
+  const [postUrl, setPostUrl] = useState("");
 
   useEffect(() => {
     setPostUrl(`${window.location.origin}/posts/${post.id}`);
@@ -41,9 +43,9 @@ export default function PostCard({ post }) {
     setIsLiking(true);
     try {
       await createReaction(post.id);
-      setReactionsCount(prev => prev + 1);
+      setReactionsCount((prev) => prev + 1);
     } catch (error) {
-      console.error('Error liking post:', error);
+      console.error("Error liking post:", error);
     } finally {
       setIsLiking(false);
     }
@@ -79,8 +81,13 @@ export default function PostCard({ post }) {
             {post.content}
           </p>
         </Link>
+        <a href={`/posts/${post.id}`} className="block cursor-pointer">
+          <p className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">
+            {post.content}
+          </p>
+        </a>
 
-        {post.media_urls && (
+        {/* {post.media_urls && (
           <a
             href={post.media_urls}
             target="_blank"
@@ -90,7 +97,7 @@ export default function PostCard({ post }) {
           >
             View attached link
           </a>
-        )}
+        )} */}
       </div>
 
       <div className="flex items-center justify-between text-gray-500">
@@ -98,23 +105,20 @@ export default function PostCard({ post }) {
           onClick={handleLike}
           disabled={isLiking}
           className={`flex items-center space-x-1 cursor-pointer transition-colors ${
-            isLiking ? 'opacity-50' : 'hover:text-red-500'
+            isLiking ? "opacity-50" : "hover:text-red-500"
           }`}
         >
-          <Heart className={`h-5 w-5 ${isLiking ? 'animate-pulse' : ''}`} />
+          <Heart className={`h-5 w-5 ${isLiking ? "animate-pulse" : ""}`} />
           <span className="text-sm">{reactionsCount}</span>
         </button>
-        <button 
+        <button
           onClick={handleComment}
           className="flex items-center space-x-1 cursor-pointer hover:text-blue-500"
         >
           <MessageCircle className="h-5 w-5" />
           <span className="text-sm">{post.comments_count}</span>
         </button>
-        <ShareMenu 
-          url={postUrl}
-          title={post.content.substring(0, 100)}
-        />
+        <ShareMenu url={postUrl} title={post.content.substring(0, 100)} />
       </div>
     </article>
   );
