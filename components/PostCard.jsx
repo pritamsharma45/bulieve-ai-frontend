@@ -81,11 +81,7 @@ export default function PostCard({ post }) {
             {post.content}
           </p>
         </Link>
-        <a href={`/posts/${post.id}`} className="block cursor-pointer">
-          <p className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">
-            {post.content}
-          </p>
-        </a>
+
 
         {/* {post.media_urls && (
           <a

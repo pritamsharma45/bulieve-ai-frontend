@@ -18,7 +18,7 @@ export default function TopBar() {
   return (
     <header className="fixed top-0 left-0 right-0 bg-gray-800 text-white p-2 shadow-lg z-50">
       <div className="max-w-2xl mx-auto flex items-center justify-between">
-        <Link href="/" className="flex items-center">
+        <Link href="/hot-takes" className="flex items-center">
           <div className="relative w-8 h-8">
             <Image
               src="/bulieve-logo.jpeg"
