@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
 import { LoginLink, RegisterLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { useState } from "react";
-import { User, FileText, Settings, LogOut } from "lucide-react";
+import { User, FileText, Settings, LogOut, Users } from "lucide-react";
 
 export default function TopBar() {
   const { isAuthenticated, user } = useKindeAuth();
@@ -59,6 +59,15 @@ export default function TopBar() {
                     >
                       <FileText className="h-4 w-4 mr-3" />
                       My Posts
+                    </Link>
+
+                    <Link
+                      href="/my-communities"
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <Users className="h-4 w-4 mr-3" />
+                      My Communities
                     </Link>
 
                     <Link

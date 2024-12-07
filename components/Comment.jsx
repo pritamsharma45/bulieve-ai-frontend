@@ -17,7 +17,9 @@ export default function Comment({ comment }) {
         </div>
         <div className="ml-2">
           <p className="text-sm font-medium">{comment.user.username}</p>
-          <p className="text-xs text-gray-500">{formatDate(comment.created_at)}</p>
+          <p className="text-xs text-gray-500">
+            {formatDate(comment.created_at)}
+          </p>
         </div>
       </div>
       <p className="text-gray-700 dark:text-gray-300 text-sm ml-10">
@@ -25,4 +27,4 @@ export default function Comment({ comment }) {
       </p>
     </div>
   );
-} 
+}

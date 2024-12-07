@@ -6,6 +6,7 @@ import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
 import { useState, useEffect } from "react";
 import { createReaction } from "@/app/actions/reactions";
 import ShareMenu from "./ShareMenu";
+import ExpandableText from './ExpandableText';
 
 export default function PostCard({ post }) {
   const { isAuthenticated } = useKindeAuth();
@@ -42,7 +43,7 @@ export default function PostCard({ post }) {
 
     setIsLiking(true);
     try {
-      await createReaction(post.id);
+      await createReaction(post.id, user.id);
       setReactionsCount((prev) => prev + 1);
     } catch (error) {
       console.error("Error liking post:", error);
@@ -77,11 +78,8 @@ export default function PostCard({ post }) {
 
       <div className="mb-3">
         <Link href={`/posts/${post.id}`} className="block cursor-pointer">
-          <p className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">
-            {post.content}
-          </p>
+          <ExpandableText text={post.content} />
         </Link>
-
 
         {/* {post.media_urls && (
           <a

@@ -37,7 +37,8 @@ export default function PostDetail({ post }) {
     setPostUrl(window.location.href);
   }, []);
 
-  const handleLike = async () => {
+  const handleLike = async (e) => {
+    e.preventDefault();
     if (!isAuthenticated) {
       window.location.href = "/api/auth/login";
       return;
@@ -111,9 +112,9 @@ export default function PostDetail({ post }) {
         </div>
 
         <div className="mb-6">
-          <p className="text-gray-600 dark:text-gray-300 text-lg">
-            {post.content}
-          </p>
+          {/* Remove expandable text */}
+          {/* <ExpandableText text={post.content} maxLines={5} /> */}
+          <p className="text-gray-600 dark:text-gray-300">{post.content}</p>
           {/* {post.media_urls && (
             <a 
               href={post.media_urls} 
@@ -156,7 +157,7 @@ export default function PostDetail({ post }) {
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="Write a comment..."
-                className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:placeholder-gray-400"
                 disabled={isCommenting}
               />
               <button

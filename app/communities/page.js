@@ -1,7 +1,7 @@
 import CommunityCard from '@/components/CommunityCard';
 
 async function getCommunities() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/communities/`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/communities/?is_private=false`, {
     next: { revalidate: 300 }
   });
   
