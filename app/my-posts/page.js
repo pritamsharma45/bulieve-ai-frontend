@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import PostCard from "@/components/PostCard";
 import CreatePost from "@/components/CreatePost";
-import { getPosts } from '@/app/actions/posts';
-import { getCurrentUser } from '@/app/actions/auth';
+import { getPosts } from "@/app/actions/posts";
+import { getCurrentUser } from "@/app/actions/auth";
 
 export default function MyPosts() {
   const [posts, setPosts] = useState([]);
@@ -14,10 +14,10 @@ export default function MyPosts() {
     async function loadPosts() {
       try {
         const user = await getCurrentUser();
-        const data = await getPosts(user.id);
-        setPosts(data.results.filter(post => post.user.id === user.id));
+        const data = await getPosts(user.email);
+        setPosts(data.results.filter((post) => post.user.email === user.email));
       } catch (error) {
-        console.error('Error loading posts:', error);
+        console.error("Error loading posts:", error);
       } finally {
         setLoading(false);
       }
@@ -41,14 +41,12 @@ export default function MyPosts() {
   return (
     <div className="max-w-2xl mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6">My Posts</h1>
-      
+
       <CreatePost onPostCreated={handlePostCreated} />
-      
+
       <div className="space-y-4">
         {posts.length > 0 ? (
-          posts.map((post) => (
-            <PostCard key={post.id} post={post} />
-          ))
+          posts.map((post) => <PostCard key={post.id} post={post} />)
         ) : (
           <p className="text-center text-gray-500 py-8">
             You haven&apos;t created any posts yet.
@@ -57,4 +55,4 @@ export default function MyPosts() {
       </div>
     </div>
   );
-} 
+}

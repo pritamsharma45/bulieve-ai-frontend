@@ -6,7 +6,7 @@ import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
 import { useState, useEffect } from "react";
 import { createReaction } from "@/app/actions/reactions";
 import ShareMenu from "./ShareMenu";
-import ExpandableText from './ExpandableText';
+import ExpandableText from "./ExpandableText";
 
 export default function PostCard({ post }) {
   const { isAuthenticated } = useKindeAuth();
