@@ -24,6 +24,21 @@ export async function joinCommunity(communityId, userId) {
   return res.json();
 }
 
+export async function getCommunities() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/communities/`,
+    {
+      next: { revalidate: 0 },
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch communities");
+  }
+
+  return res.json();
+}
+
 export async function getUserCommunities(userId) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/community-members/?user=${userId}`,
