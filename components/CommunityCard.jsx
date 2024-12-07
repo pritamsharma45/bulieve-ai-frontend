@@ -3,14 +3,14 @@
 import Link from 'next/link';
 import { Users, Lock } from 'lucide-react';
 import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
-import { useState } from 'react';
-import { joinCommunity } from '@/app/actions/community';
+import { useState, useEffect } from 'react';
+import { joinCommunity, getCommunityMembers } from '@/app/actions/community';
 
-export default function CommunityCard({ community }) {
+export default function CommunityCard({ community, isMember: initialIsMember = false, onJoin }) {
   const { isAuthenticated, user } = useKindeAuth();
   const [isJoining, setIsJoining] = useState(false);
   const [memberCount, setMemberCount] = useState(community.member_count);
-  const [hasJoined, setHasJoined] = useState(false);
+  const [isMember, setIsMember] = useState(initialIsMember);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -21,19 +21,20 @@ export default function CommunityCard({ community }) {
   };
 
   const handleJoin = async (e) => {
-    e.preventDefault(); // Prevent navigation
+    e.preventDefault();
     if (!isAuthenticated) {
       window.location.href = "/api/auth/login";
       return;
     }
 
-    if (isJoining || hasJoined) return;
+    if (isJoining || isMember) return;
 
     setIsJoining(true);
     try {
       await joinCommunity(community.id, user.id);
       setMemberCount(prev => prev + 1);
-      setHasJoined(true);
+      setIsMember(true);
+      if (onJoin) onJoin();
     } catch (error) {
       console.error('Error joining community:', error);
     } finally {
@@ -63,17 +64,21 @@ export default function CommunityCard({ community }) {
             <Users className="h-5 w-5 mr-1" />
             <span>{memberCount}</span>
           </div>
-          <button
-            onClick={handleJoin}
-            disabled={isJoining || hasJoined}
-            className={`px-4 py-2 rounded-md text-sm transition-colors ${
-              hasJoined
-                ? 'bg-gray-200 text-gray-600 cursor-default'
-                : 'bg-blue-600 text-white hover:bg-blue-700'
-            }`}
-          >
-            {isJoining ? 'Joining...' : hasJoined ? 'Joined' : 'Join'}
-          </button>
+          {isAuthenticated && (
+            <button
+              onClick={handleJoin}
+              disabled={isJoining || isMember}
+              className={`px-4 py-2 rounded-md text-sm transition-colors ${
+                isMember
+                  ? 'bg-gray-200 text-gray-600 cursor-default'
+                  : isJoining
+                  ? 'bg-blue-400 text-white cursor-wait'
+                  : 'bg-blue-600 text-white hover:bg-blue-700'
+              }`}
+            >
+              {isJoining ? 'Joining...' : isMember ? 'Joined' : 'Join'}
+            </button>
+          )}
         </div>
       </div>
       {community.description && (
