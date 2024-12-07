@@ -38,6 +38,20 @@ export async function getCommunities() {
 
   return res.json();
 }
+export async function getCommunityMembers() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/community-members/`,
+    {
+      next: { revalidate: 0 },
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch communities");
+  }
+
+  return res.json();
+}
 
 export async function getUserCommunities(userId) {
   const res = await fetch(
