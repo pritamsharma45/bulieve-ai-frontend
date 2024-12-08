@@ -50,6 +50,7 @@ export default function PostDetail({ post }) {
     try {
       await createReaction(post.id, user.id);
       setReactionsCount((prev) => prev + 1);
+      router.refresh();
     } catch (error) {
       console.error("Error liking post:", error);
     } finally {
@@ -72,6 +73,7 @@ export default function PostDetail({ post }) {
       setComment("");
       setCommentsCount((prev) => prev + 1);
       setComments((prev) => [newComment, ...prev]);
+      router.refresh();
     } catch (error) {
       console.error("Error creating comment:", error);
     } finally {

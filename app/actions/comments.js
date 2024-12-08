@@ -1,4 +1,5 @@
 "use server";
+import { revalidatePath } from "next/cache";
 
 export async function createComment(postId, userId, content) {
   console.log(postId, userId, content);
@@ -18,5 +19,9 @@ export async function createComment(postId, userId, content) {
     throw new Error("Failed to create comment");
   }
 
-  return res.json();
+  const data = await res.json();
+  revalidatePath("/hot-takes");
+  revalidatePath("/my-posts");
+  revalidatePath("/posts/[id]", "page");
+  return data;
 }

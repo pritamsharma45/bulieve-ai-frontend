@@ -3,7 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
-import { LoginLink, RegisterLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import {
+  LoginLink,
+  RegisterLink,
+  LogoutLink,
+} from "@kinde-oss/kinde-auth-nextjs/components";
 import { useState } from "react";
 import { User, FileText, Settings, LogOut, Users } from "lucide-react";
 
@@ -37,14 +41,18 @@ export default function TopBar() {
                 onClick={toggleDropdown}
                 className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white hover:bg-blue-700 transition-colors uppercase text-center"
               >
-                {(user?.given_name?.[0] || user?.email?.[0] || "U").toUpperCase()}
+                {(
+                  user?.given_name?.[0] ||
+                  user?.email?.[0] ||
+                  "U"
+                ).toUpperCase()}
               </button>
 
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 border border-gray-200 dark:border-gray-700">
                   <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                     <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                      {user?.given_name || user?.email?.split('@')[0]}
+                      {user?.given_name || user?.email?.split("@")[0]}
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
                       {user?.email}
@@ -67,7 +75,7 @@ export default function TopBar() {
                       onClick={() => setIsDropdownOpen(false)}
                     >
                       <Users className="h-4 w-4 mr-3" />
-                      My Communities
+                      Joined Communities
                     </Link>
 
                     <Link

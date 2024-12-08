@@ -31,7 +31,7 @@ export default function BottomAppBar() {
         </Link>
         <Link href="/news" className={getLinkClass("/news")}>
           <Newspaper className="h-6 w-6" />
-          <span className="text-xs">News</span>
+          <span className="text-xs">News Arena</span>
         </Link>
         <Link href="/stock-arena" className={getLinkClass("/stock-arena")}>
           <TrendingUp className="h-6 w-6" />

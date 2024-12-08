@@ -6,7 +6,8 @@ export async function getPosts(userId = null) {
     : `${process.env.NEXT_PUBLIC_API_URL}/api/posts/`;
 
   const res = await fetch(url, {
-    next: { revalidate: 300 }, // Disable cache to always get fresh data
+    next: { revalidate: 300 },
+    cache: "no-store",
   });
 
   if (!res.ok) {

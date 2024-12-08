@@ -3,6 +3,7 @@
 import { Suspense } from 'react';
 import { useEffect, useState } from 'react';
 import NewsCard from '@/components/NewsCard';
+import SearchBar from '@/components/SearchBar';
 
 function NewsLoading() {
   return (
@@ -20,6 +21,7 @@ function NewsLoading() {
 
 export default function News() {
   const [news, setNews] = useState([]);
+  const [filteredNews, setFilteredNews] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -35,6 +37,7 @@ export default function News() {
 
         const data = await res.json();
         setNews(data.results);
+        setFilteredNews(data.results);
       } catch (error) {
         console.error('Error loading news:', error);
       } finally {
@@ -44,17 +47,44 @@ export default function News() {
     loadNews();
   }, []);
 
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm.trim()) {
+      setFilteredNews(news);
+      return;
+    }
+
+    const searchLower = searchTerm.toLowerCase();
+    const filtered = news.filter(
+      (item) =>
+        item.title.toLowerCase().includes(searchLower) ||
+        (item.ai_summary && item.ai_summary.toLowerCase().includes(searchLower))
+    );
+    setFilteredNews(filtered);
+  };
+
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">Latest News</h1>
+      <h1 className="text-2xl font-bold mb-6">News Arena</h1>
+      
+      <SearchBar 
+        onSearch={handleSearch} 
+        placeholder="Search news by title or summary..." 
+      />
+
       <Suspense fallback={<NewsLoading />}>
         {loading ? (
           <NewsLoading />
         ) : (
           <div className="space-y-4">
-            {news.map((item) => (
-              <NewsCard key={item.id} news={item} />
-            ))}
+            {filteredNews.length > 0 ? (
+              filteredNews.map((item) => (
+                <NewsCard key={item.id} news={item} />
+              ))
+            ) : (
+              <p className="text-center text-gray-500 py-8">
+                No news found matching your search.
+              </p>
+            )}
           </div>
         )}
       </Suspense>

@@ -1,5 +1,5 @@
 "use server";
-
+import { revalidatePath } from "next/cache";
 export async function joinCommunity(communityId, userId) {
   console.log("Joining community", communityId, userId);
   const res = await fetch(
@@ -21,14 +21,18 @@ export async function joinCommunity(communityId, userId) {
     throw new Error("Failed to join community");
   }
 
-  return res.json();
+  const data = await res.json();
+  revalidatePath("/my-communities");
+  revalidatePath("/stock-arena");
+  return data;
 }
 
-export async function getCommunities() {
+export async function getCommunities(isPrivate = false) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/communities/`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/communities/?is_private=${isPrivate}`,
     {
       next: { revalidate: 0 },
+      cache: "no-store",
     }
   );
 
@@ -36,13 +40,35 @@ export async function getCommunities() {
     throw new Error("Failed to fetch communities");
   }
 
-  return res.json();
+  const data = await res.json();
+  revalidatePath("/my-communities");
+  revalidatePath("/stock-arena");
+  return data;
 }
+export async function getMyCommunities() {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/communities/`,
+      {
+        next: { revalidate: 0 },
+        cache: "no-store",
+      }
+    );
+  
+    if (!res.ok) {
+      throw new Error("Failed to fetch communities");
+    }
+  
+    const data = await res.json();
+    revalidatePath("/my-communities");
+    revalidatePath("/stock-arena");
+    return data;
+  }
 export async function getCommunityMembers() {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/community-members/`,
     {
       next: { revalidate: 0 },
+      cache: "no-store",
     }
   );
 
@@ -50,7 +76,10 @@ export async function getCommunityMembers() {
     throw new Error("Failed to fetch communities");
   }
 
-  return res.json();
+  const data = await res.json();
+  revalidatePath("/my-communities");
+  revalidatePath("/stock-arena");
+  return data;
 }
 
 export async function getUserCommunities(userId) {

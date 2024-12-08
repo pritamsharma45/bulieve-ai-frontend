@@ -4,13 +4,17 @@ import Link from 'next/link';
 import { Users, Lock } from 'lucide-react';
 import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
 import { useState, useEffect } from 'react';
-import { joinCommunity, getCommunityMembers } from '@/app/actions/community';
+import { joinCommunity } from '@/app/actions/community';
 
-export default function CommunityCard({ community, isMember: initialIsMember = false, onJoin }) {
+export default function CommunityCard({ community, membership, onJoin }) {
   const { isAuthenticated, user } = useKindeAuth();
   const [isJoining, setIsJoining] = useState(false);
   const [memberCount, setMemberCount] = useState(community.member_count);
-  const [isMember, setIsMember] = useState(initialIsMember);
+  const [isMember, setIsMember] = useState(!!membership);
+
+  useEffect(() => {
+    setIsMember(!!membership);
+  }, [membership]);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {

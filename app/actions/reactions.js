@@ -1,4 +1,5 @@
 "use server";
+import { revalidatePath } from "next/cache";
 
 export async function createReaction(postId, userId, reactionType = "like") {
   console.log(postId, userId, reactionType);
@@ -18,5 +19,9 @@ export async function createReaction(postId, userId, reactionType = "like") {
     throw new Error("Failed to create reaction");
   }
 
-  return res.json();
+  const data = await res.json();
+  revalidatePath("/hot-takes");
+  revalidatePath("/my-posts");
+  revalidatePath("/posts/[id]", "page");
+  return data;
 }

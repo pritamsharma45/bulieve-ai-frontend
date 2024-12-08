@@ -5,7 +5,7 @@ import { use } from 'react';
 import PostCard from "@/components/PostCard";
 import CreatePost from "@/components/CreatePost";
 import { ArrowLeft, Users, Lock } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
 
 async function getCommunity(id) {
@@ -40,6 +40,7 @@ async function getCommunityPosts(id) {
 
 export default function CommunityDetail({ params }) {
   const id = use(params).id;
+  const router = useRouter();
   const { isAuthenticated } = useKindeAuth();
   const [community, setCommunity] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -67,6 +68,11 @@ export default function CommunityDetail({ params }) {
     setPosts((prevPosts) => [newPost, ...prevPosts]);
   };
 
+  const handleGoBack = (e) => {
+    e.preventDefault();
+    router.back();
+  };
+
   if (loading || !community) {
     return (
       <div className="max-w-2xl mx-auto p-4">
@@ -77,13 +83,13 @@ export default function CommunityDetail({ params }) {
 
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <Link
-        href="/communities"
-        className="flex items-center text-gray-600 mb-6"
+      <button
+        onClick={handleGoBack}
+        className="flex items-center text-gray-600 mb-6 hover:text-gray-800 transition-colors"
       >
         <ArrowLeft className="h-5 w-5 mr-2" />
-        Back to Communities
-      </Link>
+        Go Back
+      </button>
 
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
         <div className="flex items-center justify-between mb-4">

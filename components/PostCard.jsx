@@ -7,9 +7,11 @@ import { useState, useEffect } from "react";
 import { createReaction } from "@/app/actions/reactions";
 import ShareMenu from "./ShareMenu";
 import ExpandableText from "./ExpandableText";
+import { useRouter } from "next/navigation";
 
 export default function PostCard({ post }) {
-  const { isAuthenticated } = useKindeAuth();
+  const { isAuthenticated, user } = useKindeAuth();
+  const router = useRouter();
   const [isLiking, setIsLiking] = useState(false);
   const [reactionsCount, setReactionsCount] = useState(
     post.reactions_count || 0
@@ -43,8 +45,10 @@ export default function PostCard({ post }) {
 
     setIsLiking(true);
     try {
+      console.log("Post ID, ser ID", post.id, user.id);
       await createReaction(post.id, user.id);
       setReactionsCount((prev) => prev + 1);
+      router.refresh();
     } catch (error) {
       console.error("Error liking post:", error);
     } finally {

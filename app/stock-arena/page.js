@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import CommunityCard from "@/components/CommunityCard";
+import SearchBar from "@/components/SearchBar";
 import { getCommunities, getCommunityMembers } from "@/app/actions/community";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
 
 export default function StockArena() {
   const { isAuthenticated, user } = useKindeAuth();
   const [communities, setCommunities] = useState([]);
+  const [filteredCommunities, setFilteredCommunities] = useState([]);
   const [memberships, setMemberships] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -15,12 +17,17 @@ export default function StockArena() {
     async function loadData() {
       try {
         const [communitiesData, membershipsData] = await Promise.all([
-          getCommunities(),
+          getCommunities(true),
           isAuthenticated ? getCommunityMembers() : { results: [] },
         ]);
 
-        setCommunities(communitiesData.results);
-        setMemberships(membershipsData.results);
+        const sortedCommunities = [...communitiesData.results].sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+
+        setCommunities(sortedCommunities);
+        setFilteredCommunities(sortedCommunities);
+        setMemberships(membershipsData.results || []);
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
@@ -30,6 +37,22 @@ export default function StockArena() {
 
     loadData();
   }, [isAuthenticated]);
+
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm.trim()) {
+      setFilteredCommunities(communities);
+      return;
+    }
+
+    const searchLower = searchTerm.toLowerCase();
+    const filtered = communities.filter(
+      (community) =>
+        community.name.toLowerCase().includes(searchLower) ||
+        (community.description &&
+          community.description.toLowerCase().includes(searchLower))
+    );
+    setFilteredCommunities(filtered);
+  };
 
   if (loading) {
     return (
@@ -43,31 +66,38 @@ export default function StockArena() {
   return (
     <div className="max-w-2xl mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6">Stock Arena</h1>
+
+      <SearchBar onSearch={handleSearch} />
+
       <div className="space-y-4">
-        {communities.map((community) => {
-          const membership = memberships.find(
-            (m) => m.community === community.id && m.user === user?.id
-          );
-          return (
-            <CommunityCard
-              key={community.id}
-              community={community}
-              isMember={!!membership}
-              onJoin={() => {
-                setMemberships((prev) => [
-                  ...prev,
-                  {
-                    community: community.id,
-                    user: user?.id,
-                  },
-                ]);
-              }}
-            />
-          );
-        })}
+        {filteredCommunities.length > 0 ? (
+          filteredCommunities.map((community) => {
+            const membership = memberships.find(
+              (m) => m.community === community.id && m.user === user?.id
+            );
+            return (
+              <CommunityCard
+                key={community.id}
+                community={community}
+                membership={membership}
+                onJoin={() => {
+                  setMemberships((prev) => [
+                    ...prev,
+                    {
+                      community: community.id,
+                      user: user?.id,
+                    },
+                  ]);
+                }}
+              />
+            );
+          })
+        ) : (
+          <p className="text-center text-gray-500 py-8">
+            No communities found matching your search.
+          </p>
+        )}
       </div>
-      {/* <pre>{JSON.stringify(communities, null, 2)}</pre>
-      <pre>{JSON.stringify(memberships, null, 2)}</pre> */}
     </div>
   );
 }
