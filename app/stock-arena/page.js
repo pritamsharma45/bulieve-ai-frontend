@@ -66,8 +66,8 @@ export default function StockArena() {
           );
         })}
       </div>
-      <pre>{JSON.stringify(communities, null, 2)}</pre>
-      <pre>{JSON.stringify(memberships, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(communities, null, 2)}</pre>
+      <pre>{JSON.stringify(memberships, null, 2)}</pre> */}
     </div>
   );
 }
