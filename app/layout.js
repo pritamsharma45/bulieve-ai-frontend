@@ -2,6 +2,7 @@ import localFont from "next/font/local";
 import BottomAppBar from "../components/BottomAppBar";
 import TopBar from "../components/TopBar";
 import { AuthProvider } from "./AuthProvider";
+import GoogleTagManager from "@/components/GoogleTagManager";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -42,6 +43,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
+        <GoogleTagManager />
         <AuthProvider>
           <TopBar />
           <main className="flex-grow pt-16 pb-20">{children}</main>

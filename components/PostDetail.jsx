@@ -8,6 +8,7 @@ import { createReaction } from "@/app/actions/reactions";
 import { createComment } from "@/app/actions/comments";
 import ShareMenu from "./ShareMenu";
 import Comment from "./Comment";
+import DOMPurify from 'isomorphic-dompurify';
 
 export default function PostDetail({ post }) {
   const router = useRouter();
@@ -15,14 +16,11 @@ export default function PostDetail({ post }) {
   const [comment, setComment] = useState("");
   const [isLiking, setIsLiking] = useState(false);
   const [isCommenting, setIsCommenting] = useState(false);
-  const [reactionsCount, setReactionsCount] = useState(
-    post.reactions_count || 0
-  );
+  const [reactionsCount, setReactionsCount] = useState(post.reactions_count || 0);
   const [commentsCount, setCommentsCount] = useState(post.comments_count || 0);
   const [comments, setComments] = useState(post.comments || []);
   const [postUrl, setPostUrl] = useState("");
 
-  console.log(post);
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
@@ -114,19 +112,12 @@ export default function PostDetail({ post }) {
         </div>
 
         <div className="mb-6">
-          {/* Remove expandable text */}
-          {/* <ExpandableText text={post.content} maxLines={5} /> */}
-          <p className="text-gray-600 dark:text-gray-300">{post.content}</p>
-          {/* {post.media_urls && (
-            <a 
-              href={post.media_urls} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-blue-500 hover:underline mt-4 block"
-            >
-              View attached link
-            </a>
-          )} */}
+          <div 
+            className="prose dark:prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ 
+              __html: DOMPurify.sanitize(post.content) 
+            }} 
+          />
         </div>
 
         <div className="flex items-center justify-between text-gray-500 border-t pt-4">

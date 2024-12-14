@@ -8,6 +8,8 @@ import { createReaction } from "@/app/actions/reactions";
 import ShareMenu from "./ShareMenu";
 import ExpandableText from "./ExpandableText";
 import { useRouter } from "next/navigation";
+import DOMPurify from 'isomorphic-dompurify';
+import { trackEvent, ANALYTICS_EVENTS } from '@/utils/analytics';
 
 export default function PostCard({ post }) {
   const { isAuthenticated, user } = useKindeAuth();
@@ -49,6 +51,10 @@ export default function PostCard({ post }) {
     try {
       console.log("Post ID, ser ID", post.id, user.id);
       await createReaction(post.id, user.id);
+      trackEvent(ANALYTICS_EVENTS.POST_LIKED, {
+        postId: post.id,
+        userId: user.id,
+      });
       setReactionsCount((prev) => prev + 1);
       router.refresh();
     } catch (error) {
@@ -84,20 +90,13 @@ export default function PostCard({ post }) {
 
       <div className="mb-3">
         <Link href={`/posts/${post.id}`} className="block cursor-pointer">
-          <ExpandableText text={post.content} />
+          <div 
+            className="prose dark:prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ 
+              __html: DOMPurify.sanitize(post.content) 
+            }} 
+          />
         </Link>
-
-        {/* {post.media_urls && (
-          <a
-            href={post.media_urls}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 text-sm hover:underline mt-2 block cursor-pointer"
-            onClick={handleLinkClick}
-          >
-            View attached link
-          </a>
-        )} */}
       </div>
 
       <div className="flex items-center justify-between text-gray-500">
