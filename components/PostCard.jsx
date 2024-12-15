@@ -6,7 +6,6 @@ import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
 import { useState, useEffect } from "react";
 import { createReaction } from "@/app/actions/reactions";
 import ShareMenu from "./ShareMenu";
-import ExpandableText from "./ExpandableText";
 import { useRouter } from "next/navigation";
 import DOMPurify from "isomorphic-dompurify";
 import { trackEvent, ANALYTICS_EVENTS } from "@/utils/analytics";
@@ -15,9 +14,8 @@ export default function PostCard({ post }) {
   const { isAuthenticated, user } = useKindeAuth();
   const router = useRouter();
   const [isLiking, setIsLiking] = useState(false);
-  const [reactionsCount, setReactionsCount] = useState(
-    post.reactions_count || 0
-  );
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [reactionsCount, setReactionsCount] = useState(post.reactions_count || 0);
   const [postUrl, setPostUrl] = useState("");
 
   useEffect(() => {
@@ -70,8 +68,12 @@ export default function PostCard({ post }) {
       window.location.href = "/api/auth/login";
       return;
     }
-    // Navigate to post detail page for commenting
     window.location.href = `/posts/${post.id}`;
+  };
+
+  const toggleExpand = (e) => {
+    e.preventDefault();
+    setIsExpanded(!isExpanded);
   };
 
   return (
@@ -91,11 +93,19 @@ export default function PostCard({ post }) {
       <div className="mb-3">
         <Link href={`/posts/${post.id}`} className="block cursor-pointer">
           <div
-            className="prose dark:prose-invert max-w-none line-clamp-6"
+            className={`prose dark:prose-invert max-w-none ${
+              !isExpanded ? "line-clamp-6" : ""
+            }`}
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(post.content),
             }}
           />
+          <button
+            onClick={toggleExpand}
+            className="text-blue-500 hover:text-blue-600 text-sm mt-2 focus:outline-none"
+          >
+            {isExpanded ? "Show less" : "Read more"}
+          </button>
         </Link>
       </div>
 
