@@ -74,7 +74,7 @@ export default function RichTextEditor({ content, onChange }) {
       </div>
       <EditorContent
         editor={editor}
-        className="prose dark:prose-invert max-w-none p-4 h-full min-h-[200px] max-h-[400px] overflow-y-auto"
+        className="prose dark:prose-invert max-w-none p-4 h-full min-h-[180px] max-h-[200px] overflow-y-auto"
       />
     </div>
   );
