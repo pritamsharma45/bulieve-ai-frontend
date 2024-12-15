@@ -8,8 +8,8 @@ import { createReaction } from "@/app/actions/reactions";
 import ShareMenu from "./ShareMenu";
 import ExpandableText from "./ExpandableText";
 import { useRouter } from "next/navigation";
-import DOMPurify from 'isomorphic-dompurify';
-import { trackEvent, ANALYTICS_EVENTS } from '@/utils/analytics';
+import DOMPurify from "isomorphic-dompurify";
+import { trackEvent, ANALYTICS_EVENTS } from "@/utils/analytics";
 
 export default function PostCard({ post }) {
   const { isAuthenticated, user } = useKindeAuth();
@@ -90,11 +90,11 @@ export default function PostCard({ post }) {
 
       <div className="mb-3">
         <Link href={`/posts/${post.id}`} className="block cursor-pointer">
-          <div 
-            className="prose dark:prose-invert max-w-none"
-            dangerouslySetInnerHTML={{ 
-              __html: DOMPurify.sanitize(post.content) 
-            }} 
+          <div
+            className="prose dark:prose-invert max-w-none line-clamp-6"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(post.content),
+            }}
           />
         </Link>
       </div>
