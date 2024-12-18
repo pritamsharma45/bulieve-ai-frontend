@@ -5,6 +5,18 @@ import Script from "next/script";
 export default function GoogleTagManager() {
   return (
     <>
+      {/* Initialize dataLayer */}
+      <Script
+        id="gtm-init"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+          `,
+        }}
+      />
+
+      {/* Google Tag Manager */}
       <Script
         id="gtm"
         strategy="afterInteractive"
@@ -18,14 +30,25 @@ export default function GoogleTagManager() {
           `,
         }}
       />
-      <noscript>
-        <iframe
-          src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM_ID}`}
-          height="0"
-          width="0"
-          style={{ display: "none", visibility: "hidden" }}
-        />
-      </noscript>
+
+      {/* Google Analytics */}
+      <Script
+        id="ga"
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+      />
+      <Script
+        id="ga-init"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+          `,
+        }}
+      />
     </>
   );
 } 

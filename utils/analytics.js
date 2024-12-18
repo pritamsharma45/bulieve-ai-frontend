@@ -1,17 +1,19 @@
 export const trackEvent = (eventName, eventParams = {}) => {
-  if (typeof window !== 'undefined' && window.dataLayer) {
-    window.dataLayer.push({
-      event: eventName,
-      ...eventParams,
-    });
+  try {
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', eventName, eventParams);
+      console.log('Analytics Event:', { event: eventName, ...eventParams });
+    }
+  } catch (error) {
+    console.error('Error tracking event:', error);
   }
 };
 
-// Predefined events
+// Predefined events with GA4 naming conventions
 export const ANALYTICS_EVENTS = {
-  POST_CREATED: 'post_created',
-  POST_LIKED: 'post_liked',
-  COMMENT_ADDED: 'comment_added',
-  COMMUNITY_JOINED: 'community_joined',
-  COMMUNITY_CREATED: 'community_created',
+  POST_CREATED: 'create_post',
+  POST_LIKED: 'like_post',
+  COMMENT_ADDED: 'add_comment',
+  COMMUNITY_JOINED: 'join_community',
+  COMMUNITY_CREATED: 'create_community',
 }; 
