@@ -1,8 +1,8 @@
 "use client";
 
-import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
-import { trackEvent } from '@/utils/analytics';
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import { trackEvent } from "@/utils/analytics";
 import BottomAppBar from "./BottomAppBar";
 import TopBar from "./TopBar";
 import GoogleAnalytics from "./GoogleAnalytics";
@@ -13,7 +13,7 @@ export default function ClientLayout({ children }) {
   useEffect(() => {
     // Track page views
     if (pathname) {
-      gtag('event', 'page_view', {
+      gtag("event", "page_view", {
         page_path: pathname,
         page_title: document.title,
       });
@@ -28,4 +28,4 @@ export default function ClientLayout({ children }) {
       <BottomAppBar />
     </>
   );
-} 
+}
