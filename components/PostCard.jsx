@@ -9,13 +9,16 @@ import ShareMenu from "./ShareMenu";
 import { useRouter } from "next/navigation";
 import DOMPurify from "isomorphic-dompurify";
 import { trackEvent, ANALYTICS_EVENTS } from "@/utils/analytics";
+import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 
-export default function PostCard({ post }) {
+export default function PostCard({ post, isMyPost, onEdit, onDelete }) {
   const { isAuthenticated, user } = useKindeAuth();
   const router = useRouter();
   const [isLiking, setIsLiking] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [reactionsCount, setReactionsCount] = useState(post.reactions_count || 0);
+  const [reactionsCount, setReactionsCount] = useState(
+    post.reactions_count || 0
+  );
   const [postUrl, setPostUrl] = useState("");
 
   useEffect(() => {
@@ -129,6 +132,25 @@ export default function PostCard({ post }) {
         </button>
         <ShareMenu url={postUrl} title={post.content.substring(0, 100)} />
       </div>
+
+      {isMyPost && (
+        <div className="flex justify-end gap-2 mt-4">
+          <button
+            onClick={() => onEdit(post)}
+            className="p-2 text-gray-600 hover:text-blue-600 rounded-full hover:bg-gray-100"
+            title="Edit post"
+          >
+            <PencilIcon className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => onDelete(post.id)}
+            className="p-2 text-gray-600 hover:text-red-600 rounded-full hover:bg-gray-100"
+            title="Delete post"
+          >
+            <TrashIcon className="w-5 h-5" />
+          </button>
+        </div>
+      )}
     </article>
   );
 }
