@@ -8,7 +8,8 @@ import { createReaction } from "@/app/actions/reactions";
 import { createComment } from "@/app/actions/comments";
 import ShareMenu from "./ShareMenu";
 import Comment from "./Comment";
-import DOMPurify from 'isomorphic-dompurify';
+import DOMPurify from "isomorphic-dompurify";
+import AuthDialog from "./AuthDialog";
 
 export default function PostDetail({ post }) {
   const router = useRouter();
@@ -16,10 +17,13 @@ export default function PostDetail({ post }) {
   const [comment, setComment] = useState("");
   const [isLiking, setIsLiking] = useState(false);
   const [isCommenting, setIsCommenting] = useState(false);
-  const [reactionsCount, setReactionsCount] = useState(post.reactions_count || 0);
+  const [reactionsCount, setReactionsCount] = useState(
+    post.reactions_count || 0
+  );
   const [commentsCount, setCommentsCount] = useState(post.comments_count || 0);
   const [comments, setComments] = useState(post.comments || []);
   const [postUrl, setPostUrl] = useState("");
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -38,7 +42,7 @@ export default function PostDetail({ post }) {
   const handleLike = async (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
-      window.location.href = "/api/auth/login";
+      setShowAuthDialog(true);
       return;
     }
 
@@ -59,7 +63,7 @@ export default function PostDetail({ post }) {
   const handleComment = async (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
-      window.location.href = "/api/auth/login";
+      setShowAuthDialog(true);
       return;
     }
 
@@ -112,11 +116,11 @@ export default function PostDetail({ post }) {
         </div>
 
         <div className="mb-6">
-          <div 
+          <div
             className="prose dark:prose-invert max-w-none"
-            dangerouslySetInnerHTML={{ 
-              __html: DOMPurify.sanitize(post.content) 
-            }} 
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(post.content),
+            }}
           />
         </div>
 
@@ -176,6 +180,13 @@ export default function PostDetail({ post }) {
           )}
         </div>
       </div>
+
+      {showAuthDialog && (
+        <AuthDialog
+          isOpen={showAuthDialog}
+          onClose={() => setShowAuthDialog(false)}
+        />
+      )}
     </div>
   );
 }
