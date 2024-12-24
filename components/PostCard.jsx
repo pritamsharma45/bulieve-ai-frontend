@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import DOMPurify from "isomorphic-dompurify";
 import { trackEvent, ANALYTICS_EVENTS } from "@/utils/analytics";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
+import AuthDialog from "./AuthDialog";
 
 export default function PostCard({ post, isMyPost, onEdit, onDelete }) {
   const { isAuthenticated, user } = useKindeAuth();
@@ -20,6 +21,7 @@ export default function PostCard({ post, isMyPost, onEdit, onDelete }) {
     post.reactions_count || 0
   );
   const [postUrl, setPostUrl] = useState("");
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
 
   useEffect(() => {
     setPostUrl(`${window.location.origin}/posts/${post.id}`);
@@ -42,7 +44,7 @@ export default function PostCard({ post, isMyPost, onEdit, onDelete }) {
   const handleLike = async (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
-      window.location.href = "/api/auth/login";
+      setShowAuthDialog(true);
       return;
     }
 
@@ -50,7 +52,7 @@ export default function PostCard({ post, isMyPost, onEdit, onDelete }) {
 
     setIsLiking(true);
     try {
-      console.log("Post ID, ser ID", post.id, user.id);
+      console.log("Post ID, user ID", post.id, user.id);
       await createReaction(post.id, user.id);
       trackEvent(ANALYTICS_EVENTS.POST_LIKED, {
         postId: post.id,
@@ -68,7 +70,7 @@ export default function PostCard({ post, isMyPost, onEdit, onDelete }) {
   const handleComment = (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
-      window.location.href = "/api/auth/login";
+      setShowAuthDialog(true);
       return;
     }
     window.location.href = `/posts/${post.id}`;
@@ -150,6 +152,13 @@ export default function PostCard({ post, isMyPost, onEdit, onDelete }) {
             <TrashIcon className="w-5 h-5" />
           </button>
         </div>
+      )}
+
+      {showAuthDialog && (
+        <AuthDialog
+          isOpen={showAuthDialog}
+          onClose={() => setShowAuthDialog(false)}
+        />
       )}
     </article>
   );
